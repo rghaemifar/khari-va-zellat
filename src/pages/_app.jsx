@@ -1,30 +1,39 @@
-import * as React from "react";
-import Head from "next/head";
-import rtlPlugin from "stylis-plugin-rtl";
-import { prefixer } from "stylis";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { CacheProvider } from "@emotion/react";
-import theme from "../theme";
-import createCache from "@emotion/cache";
-import "../styles/globals.css";
-import GeneralContextProvider from "@/providers/generalContext";
-import { NotistackProvider } from "@/providers/noti";
+import * as React from 'react'
+import Head from 'next/head'
+import rtlPlugin from 'stylis-plugin-rtl'
+import { prefixer } from 'stylis'
+import { ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import { CacheProvider } from '@emotion/react'
+import theme from '../theme'
+import createCache from '@emotion/cache'
+import '../styles/globals.css'
+import GeneralContextProvider from '@/providers/generalContext'
+import { NotistackProvider } from '@/providers/noti'
+import { useRouter } from 'next/router'
+import { isLoggedIn } from '@/utils/auth'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 
 export default function MyApp(props) {
-  const { Component, pageProps } = props;
+  const { Component, pageProps } = props
+  const router = useRouter()
 
   const cacheRtl = createCache({
-    key: "muirtl",
+    key: 'muirtl',
     stylisPlugins: [prefixer, rtlPlugin],
-  });
+  })
+
+  React.useEffect(() => {
+    const hasToken = isLoggedIn()
+    if (hasToken) return
+    router.push('/login/')
+  }, [router.asPath])
 
   return (
     <CacheProvider value={cacheRtl}>
       <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
@@ -36,7 +45,7 @@ export default function MyApp(props) {
         </NotistackProvider>
       </ThemeProvider>
     </CacheProvider>
-  );
+  )
 }
 
 // MyApp.propTypes = {

@@ -1,10 +1,27 @@
 import { Box, Drawer, Icon, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import { SIDEBAR_ITEMS } from '@/constants/sidebarIcons'
+import React, { useEffect, useMemo, useState } from 'react'
+import { sidebarItems } from '@/constants/sidebarIcons'
 import { GeneralContext } from '@/providers/generalContext'
+import Link from 'next/link'
+import { getAccessibleRoutes } from '../../utils/roles'
 
 function SideBar() {
-  const { isSidebarOpen, setIsSidebarOpen } = React.useContext(GeneralContext)
+  const { isSidebarOpen } = React.useContext(GeneralContext)
+  const [accessibleRoutes, setAccesssibleRoutes] = useState([])
+
+  const getShit = async () => {
+    const res = await getAccessibleRoutes()
+    setAccesssibleRoutes(res)
+  }
+
+  useEffect(() => {
+    getShit()
+  }, [])
+
+  const shiiit = useMemo(
+    () => sidebarItems.filter((route) => accessibleRoutes.includes(route.key)),
+    [accessibleRoutes]
+  )
 
   return (
     <Box sx={{ display: 'flex', direction: 'ltr' }}>
@@ -26,9 +43,13 @@ function SideBar() {
         variant='permanent'
         open={isSidebarOpen}
       >
-        {SIDEBAR_ITEMS.map((item, i) => (
-          <a key={item.title} href={item.url} style={{ color: 'white' }}>
-            <Box display='flex' alignItems='center'>
+        {shiiit.map((item) => (
+          <Link key={item.title} to={item.url} href={item.url}>
+            <Box
+              display='flex'
+              alignItems='center'
+              style={{ color: 'white', cursor: 'pointer' }}
+            >
               <Icon>{item.icon}</Icon>
               <Typography
                 padding='12px'
@@ -39,7 +60,7 @@ function SideBar() {
                 {item.title}
               </Typography>
             </Box>
-          </a>
+          </Link>
         ))}
       </Drawer>
     </Box>

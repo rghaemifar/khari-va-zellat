@@ -1,69 +1,86 @@
-import { useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import OtpCodeInput from "./OtpCodeInput";
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import { request } from '../../utils/request'
+import { saveToken } from '../../utils/auth'
+import { saveAccessibleRoutes, saveRole } from '../../utils/roles'
+import { useRouter } from 'next/router'
+import { loginUrl } from '@/utils/urls'
 
 export default function SignIn() {
-  const [isClicked, setIsClicked] = useState(false);
+  const router = useRouter()
+
+  const sendLoginRequest = async (data) => {
+    const res = await request({
+      url: loginUrl,
+      body: JSON.stringify(data),
+      method: 'POST',
+    })
+    if (!res.token) return
+    saveAccessibleRoutes(res.actions)
+    saveRole(res.role)
+    saveToken(res.token)
+    router.push('/')
+  }
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      phoneNumber: data.get("phone-number"),
-    });
-    setIsClicked(true);
-  };
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    sendLoginRequest({
+      email: data.get('email'),
+      password: data.get('password'),
+    })
+  }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component='main' maxWidth='xs'>
       <Box
         sx={{
           marginTop: 18,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          ورود |‌ ثبت نام
+        <Typography component='h1' variant='h5'>
+          ورود
         </Typography>
-        {isClicked ? (
-          <OtpCodeInput />
-        ) : (
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="phone-number"
-              label="شماره موبایل"
-              inputProps={{
-                maxLength: 11,
-              }}
-              type="phone-number"
-              id="phone-number"
-              autoComplete="current-phone-number"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              ارسال کد
-            </Button>
-          </Box>
-        )}
+        <Box component='form' onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <TextField
+            margin='normal'
+            required
+            fullWidth
+            label='نام کاربری'
+            name='email'
+            id='email'
+            autoComplete='current-email'
+          />{' '}
+          <TextField
+            margin='normal'
+            required
+            fullWidth
+            label='رمز'
+            name='password'
+            id='password'
+            autoComplete='current-password'
+          />
+          <Button
+            type='submit'
+            fullWidth
+            variant='contained'
+            sx={{ mt: 3, mb: 2 }}
+          >
+            ورود
+          </Button>
+        </Box>
       </Box>
     </Container>
-  );
+  )
 }
