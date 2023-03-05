@@ -1,17 +1,17 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles'
 
 // Create a theme instance.
 const theme = createTheme({
-  direction: "rtl",
+  direction: 'rtl',
   typography: {
-    fontFamily: "IRANsans Regular",
+    fontFamily: 'IRANsans Regular',
   },
   palette: {
     primary: {
-      main: "#00baba",
+      main: '#ffc453',
     },
     secondary: {
-      main: "#ff6666",
+      main: '#ff6666',
     },
   },
   components: {
@@ -19,9 +19,9 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => {
           return {
-            fontFamily: "IRANsans Regular",
-            direction: "ltr",
-          };
+            fontFamily: 'IRANsans Regular',
+            direction: 'ltr',
+          }
         },
       },
       // variants: [
@@ -36,7 +36,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          fontFamily: "IRANsans Bold",
+          fontFamily: 'IRANsans Bold',
         },
       },
     },
@@ -44,6 +44,6 @@ const theme = createTheme({
   // typography: {
   //   fontFamily: roboto.style.fontFamily,
   // },
-});
+})
 
-export default theme;
+export default theme

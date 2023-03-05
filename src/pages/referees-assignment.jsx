@@ -57,7 +57,7 @@ function RefereesAssignment() {
             minWidth: 900,
             maxHeight: '82vh',
             overflowY: 'auto',
-            border: '1px solid #00baba',
+            border: '1px solid #ffc453',
           }}
         >
           <Table stickyHeader>

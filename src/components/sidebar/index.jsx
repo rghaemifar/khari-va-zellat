@@ -35,7 +35,7 @@ function SideBar() {
             padding: '12px',
             transition: '225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
             overflowX: 'hidden',
-            background: theme.palette.info.dark,
+            background: '#000000',
             border: 'none',
           },
         })}
