@@ -51,6 +51,7 @@ export default function ThesisDetail() {
   }
 
   const handleReject = async () => {
+    const id = query.id
     await request({
       url: rejectThesisUrl,
       method: 'POST',
@@ -73,27 +74,31 @@ export default function ThesisDetail() {
                 لینک
               </a>
             </Box>
-            <Box sx={{ marginTop: '30px' }}>
-              <InputLabel id='receiver_id_label'>
-                نام بررسی کننده بعدی
-              </InputLabel>
-              <Select
-                margin='normal'
-                required
-                fullWidth
-                label='نام استاد بررسی کننده'
-                name='receiver_id'
-                id='receiver_id'
-                labelId='receiver_id_label'
-              >
-                {data.next_referees?.map((el) => (
-                  <MenuItem value={el.id} key={el.email}>
-                    {el.email} - {el.role}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-            {isManager ? (
+            {data.next_referees?.length ? (
+              <Box sx={{ marginTop: '30px' }}>
+                <InputLabel id='receiver_id_label'>
+                  نام بررسی کننده بعدی
+                </InputLabel>
+                <Select
+                  margin='normal'
+                  required
+                  fullWidth
+                  label='نام استاد بررسی کننده'
+                  name='receiver_id'
+                  id='receiver_id'
+                  labelId='receiver_id_label'
+                >
+                  {data.next_referees?.map((el) => (
+                    <MenuItem value={el.id} key={el.email}>
+                      {el.email} - {el.role}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+            ) : (
+              <></>
+            )}
+            {isManager && data.next_referees?.length ? (
               <Box sx={{ marginTop: '30px' }}>
                 <InputLabel id='receiver_id_2_label'>
                   نام بررسی کننده بعدی دوم
